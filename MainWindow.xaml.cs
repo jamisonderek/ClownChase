@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using Microsoft.Kinect;
 
 namespace ClownChase
 {
@@ -20,9 +8,30 @@ namespace ClownChase
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IKinect _kinect;
+        private KinectSensor _sensor;
+
         public MainWindow()
         {
+            _kinect = new Kinect();
             InitializeComponent();
+        }
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            _sensor = _kinect.GetSensor();
+            if (_sensor == null)
+            {
+                ShowStatus(Properties.Resources.KinectNotFound);
+                return;
+            }
+
+            ShowStatus(Properties.Resources.KinectFound);
+        }
+
+        private void ShowStatus(string message)
+        {
+            StatusBarText.Text = message;
         }
     }
 }

@@ -5,3 +5,4 @@
 *_Resharper.*
 bin
 obj
+packages/FluentAssertions.3.2.1
