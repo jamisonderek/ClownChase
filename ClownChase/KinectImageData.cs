@@ -9,11 +9,13 @@ namespace ClownChase
 
         public DepthImagePixel[] DepthPixels;
         public byte[] ColorPixels;
+        public Boundaries Boundaries;
 
-        public KinectImageData(int depthDataLength, int colorDataLength)
+        public KinectImageData(Boundaries boundaries)
         {
-            DepthPixels = new DepthImagePixel[depthDataLength];
-            ColorPixels = new byte[colorDataLength]; 
+            Boundaries = boundaries;
+            DepthPixels = new DepthImagePixel[Boundaries.DepthDataLength];
+            ColorPixels = new byte[Boundaries.ColorDataLength]; 
         }
     }
 }

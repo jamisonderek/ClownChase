@@ -52,9 +52,9 @@ namespace ClownChase
 
             if (e.ColorReceived)
             {
-                var bitmap = new WriteableBitmap(e.Boundaries.ColorRect.Width, e.Boundaries.ColorRect.Height, 96, 96, PixelFormats.Bgr32, null);
+                var bitmap = new WriteableBitmap(e.Data.Boundaries.ColorRect.Width, e.Data.Boundaries.ColorRect.Height, 96, 96, PixelFormats.Bgr32, null);
                 PersonColor.Source = bitmap;
-                bitmap.WritePixels(e.Boundaries.ColorRect, e.Data.ColorPixels, bitmap.PixelWidth * sizeof(int), 0);
+                bitmap.WritePixels(e.Data.Boundaries.ColorRect, e.Data.ColorPixels, bitmap.PixelWidth * sizeof(int), 0);
             }
         }
 
