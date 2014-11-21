@@ -25,6 +25,20 @@ namespace ClownChase
             depthStream.Enable(KinectImageData.DepthFormat);
             depthStream.Range = DepthRange.Default;
             colorStream.Enable(KinectImageData.ColorFormat);
+
+            _kinectSensor.AllFramesReady += AllFramesReady;
+        }
+
+
+        public event EventHandler<FrameReadyEventArgs> FrameReady;
+
+        private void AllFramesReady(object sender, AllFramesReadyEventArgs e)
+        {
+            var frameReady = FrameReady;
+            if (frameReady.GetInvocationList().Length > 0)
+            {
+                frameReady(sender, new FrameReadyEventArgs{});                
+            }
         }
 
         public bool Start()

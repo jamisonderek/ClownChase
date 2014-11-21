@@ -12,5 +12,7 @@ namespace ClownChase
         void Initialize();
         bool Start();
         bool Stop();
+
+        event EventHandler<FrameReadyEventArgs> FrameReady;
     }
 }

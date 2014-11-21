@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace ClownChase
 {
@@ -37,6 +38,22 @@ namespace ClownChase
             {
                 ShowStatus(Properties.Resources.KinectNotStarted);                
             }
+
+            _sensor.FrameReady += FrameReady;
+        }
+
+        private int _frame;
+        private DateTime lastFrame = DateTime.MinValue;
+        private void FrameReady(object sender, FrameReadyEventArgs e)
+        {
+            string message = String.Format("Frame {0}", ++_frame);
+            if (lastFrame != DateTime.MinValue)
+            {
+                var diff = DateTime.Now - lastFrame;
+                message += String.Format("   {0:00.00} frames/sec", 1000/diff.TotalMilliseconds);
+            }
+            lastFrame = DateTime.Now;
+            ShowStatus(message);
         }
 
         public void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
