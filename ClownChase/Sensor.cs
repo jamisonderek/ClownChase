@@ -37,7 +37,34 @@ namespace ClownChase
             var frameReady = FrameReady;
             if (frameReady.GetInvocationList().Length > 0)
             {
-                frameReady(sender, new FrameReadyEventArgs{});                
+                var depthStream = _kinectSensor.DepthStream;
+                var colorStream = _kinectSensor.ColorStream;
+
+                var frameReadyEvent = new FrameReadyEventArgs();
+                var kinectImageData = new KinectImageData(depthStream.FramePixelDataLength, colorStream.FramePixelDataLength);
+
+                using (var depthFrame = e.OpenDepthImageFrame())
+                {
+                    if (null != depthFrame)
+                    {
+                        depthFrame.CopyDepthImagePixelDataTo(kinectImageData.DepthPixels);
+                        frameReadyEvent.DepthReceived = true;
+                    }
+                }
+
+                using (var colorFrame = e.OpenColorImageFrame())
+                {
+                    if (null != colorFrame)
+                    {
+                        colorFrame.CopyPixelDataTo(kinectImageData.ColorPixels);
+                        frameReadyEvent.ColorReceived = true;
+                    }
+                }
+
+                frameReadyEvent.Data = kinectImageData;
+                frameReadyEvent.Boundaries = new Boundaries(depthStream.FrameWidth, depthStream.FrameHeight, depthStream.FramePixelDataLength, colorStream.FrameWidth, colorStream.FrameHeight, colorStream.FramePixelDataLength);
+
+                frameReady(sender, frameReadyEvent);                
             }
         }
 

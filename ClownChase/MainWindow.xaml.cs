@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ClownChase
 {
@@ -47,6 +49,13 @@ namespace ClownChase
             }
             _lastFrame = DateTime.Now;
             ShowStatus(message);
+
+            if (e.ColorReceived)
+            {
+                var bitmap = new WriteableBitmap(e.Boundaries.ColorRect.Width, e.Boundaries.ColorRect.Height, 96, 96, PixelFormats.Bgr32, null);
+                PersonColor.Source = bitmap;
+                bitmap.WritePixels(e.Boundaries.ColorRect, e.Data.ColorPixels, bitmap.PixelWidth * sizeof(int), 0);
+            }
         }
 
         public void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)

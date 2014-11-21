@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Boundaries.cs" />
     <Compile Include="FrameReadyEventArgs.cs" />
     <Compile Include="KinectImageData.cs" />
     <Compile Include="Sensor.cs" />
