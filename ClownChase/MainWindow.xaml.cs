@@ -6,7 +6,7 @@ namespace ClownChase
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private readonly IKinect _kinect;
 
@@ -30,29 +30,22 @@ namespace ClownChase
             _sensor.Initialize();
 
             var start = _sensor.Start();
-            if (start)
-            {
-                ShowStatus(Properties.Resources.KinectStarted);                                
-            }
-            else
-            {
-                ShowStatus(Properties.Resources.KinectNotStarted);                
-            }
+            ShowStatus(start?Properties.Resources.KinectStarted:Properties.Resources.KinectNotStarted);                
 
             _sensor.FrameReady += FrameReady;
         }
 
         private int _frame;
-        private DateTime lastFrame = DateTime.MinValue;
+        private DateTime _lastFrame = DateTime.MinValue;
         private void FrameReady(object sender, FrameReadyEventArgs e)
         {
             string message = String.Format("Frame {0}", ++_frame);
-            if (lastFrame != DateTime.MinValue)
+            if (_lastFrame != DateTime.MinValue)
             {
-                var diff = DateTime.Now - lastFrame;
+                var diff = DateTime.Now - _lastFrame;
                 message += String.Format("   {0:00.00} frames/sec", 1000/diff.TotalMilliseconds);
             }
-            lastFrame = DateTime.Now;
+            _lastFrame = DateTime.Now;
             ShowStatus(message);
         }
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.Kinect;
-
-namespace ClownChase
+﻿namespace ClownChase
 {
     public interface IKinect
     {
