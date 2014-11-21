@@ -58,8 +58,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Boundaries.cs" />
+    <Compile Include="ColorPixelMask.cs" />
     <Compile Include="FrameReadyEventArgs.cs" />
     <Compile Include="KinectImageData.cs" />
+    <Compile Include="Mapper.cs" />
     <Compile Include="Sensor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -32,7 +32,7 @@ namespace ClownChase
             DepthDataLength = depthDataLength;
             ColorDataLength = colorDataLength;
 
-            const double edges = 0.3;
+            const double edges = 0.4;
             DepthMinX = (int)(DepthWidth * edges);
             DepthMaxX = (int)(DepthWidth * (1 - edges));
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -32,15 +33,30 @@ namespace ClownChase
             _sensor.Initialize();
 
             var start = _sensor.Start();
-            ShowStatus(start?Properties.Resources.KinectStarted:Properties.Resources.KinectNotStarted);                
+            ShowStatus(start?Properties.Resources.KinectStarted:Properties.Resources.KinectNotStarted);
+
+            InitializeImage(PersonColor, _sensor.Boundaries);
 
             _sensor.FrameReady += FrameReady;
+        }
+
+        private void InitializeImage(System.Windows.Controls.Image image, Boundaries boundaries)
+        {
+            var depthWidth = boundaries.DepthWidth;
+            var depthHeight = boundaries.DepthHeight;
+            var colorWidth = boundaries.ColorRect.Width;
+            var colorHeight = boundaries.ColorRect.Height;
+            var maskImage = new WriteableBitmap(depthWidth, depthHeight, 96, 96, PixelFormats.Bgra32, null);
+            image.Source = new WriteableBitmap(colorWidth, colorHeight, 96, 96, PixelFormats.Bgr32, null);
+            image.OpacityMask = new ImageBrush { ImageSource = maskImage };
         }
 
         private int _frame;
         private DateTime _lastFrame = DateTime.MinValue;
         private void FrameReady(object sender, FrameReadyEventArgs e)
         {
+            ColorPixelMask mask = null;
+
             string message = String.Format("Frame {0}", ++_frame);
             if (_lastFrame != DateTime.MinValue)
             {
@@ -48,14 +64,32 @@ namespace ClownChase
                 message += String.Format("   {0:00.00} frames/sec", 1000/diff.TotalMilliseconds);
             }
             _lastFrame = DateTime.Now;
-            ShowStatus(message);
+
+            if (e.DepthReceived)
+            {
+                mask = new ColorPixelMask(e.Data.Boundaries);
+                var nearestObject = e.Data.PopulateColorPixelMask(mask, e.Mapper, (i, i1) => Math.Abs(i-i1)<400);
+                message += String.Format("  object@{0}", nearestObject);
+            }
 
             if (e.ColorReceived)
             {
-                var bitmap = new WriteableBitmap(e.Data.Boundaries.ColorRect.Width, e.Data.Boundaries.ColorRect.Height, 96, 96, PixelFormats.Bgr32, null);
-                PersonColor.Source = bitmap;
-                bitmap.WritePixels(e.Data.Boundaries.ColorRect, e.Data.ColorPixels, bitmap.PixelWidth * sizeof(int), 0);
+                var image = PersonColor;
+
+                var sourceBitmap = image.Source as WriteableBitmap;
+                Debug.Assert(null != sourceBitmap);
+
+                var maskBitmap = ((ImageBrush)image.OpacityMask).ImageSource as WriteableBitmap;
+                Debug.Assert(null != maskBitmap);
+
+                sourceBitmap.WritePixels(e.Data.Boundaries.ColorRect, e.Data.ColorPixels, sourceBitmap.PixelWidth * sizeof(int), 0);
+                if (mask != null)
+                {
+                    maskBitmap.WritePixels(e.Data.Boundaries.DepthRect, mask.Mask, e.Data.Boundaries.DepthRect.Width * ((maskBitmap.Format.BitsPerPixel + 7) / 8), 0);                    
+                }
             }
+
+            ShowStatus(message);
         }
 
         public void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)

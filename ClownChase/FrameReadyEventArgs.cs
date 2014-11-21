@@ -6,5 +6,6 @@ namespace ClownChase
         public bool DepthReceived;
         public bool ColorReceived;
         public KinectImageData Data;
+        public Mapper Mapper;
     }
 }

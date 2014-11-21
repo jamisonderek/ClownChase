@@ -8,6 +8,7 @@ namespace ClownChase
         void Initialize();
         bool Start();
         bool Stop();
+        Boundaries Boundaries { get; }
 
         event EventHandler<FrameReadyEventArgs> FrameReady;
     }

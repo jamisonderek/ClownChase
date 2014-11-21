@@ -29,6 +29,23 @@ namespace ClownChase
             _kinectSensor.AllFramesReady += AllFramesReady;
         }
 
+        private Boundaries _boundaries;
+        public Boundaries Boundaries
+        {
+            get
+            {
+                if (_boundaries == null)
+                {
+                    var depthStream = _kinectSensor.DepthStream;
+                    var colorStream = _kinectSensor.ColorStream;
+                    _boundaries = new Boundaries(depthStream.FrameWidth, depthStream.FrameHeight,
+                        depthStream.FramePixelDataLength, colorStream.FrameWidth, colorStream.FrameHeight,
+                        colorStream.FramePixelDataLength);
+                }
+
+                return _boundaries;
+            }
+        }
 
         public event EventHandler<FrameReadyEventArgs> FrameReady;
 
@@ -37,12 +54,9 @@ namespace ClownChase
             var frameReady = FrameReady;
             if (frameReady.GetInvocationList().Length > 0)
             {
-                var depthStream = _kinectSensor.DepthStream;
-                var colorStream = _kinectSensor.ColorStream;
-                var boundaries = new Boundaries(depthStream.FrameWidth, depthStream.FrameHeight, depthStream.FramePixelDataLength, colorStream.FrameWidth, colorStream.FrameHeight, colorStream.FramePixelDataLength);
 
                 var frameReadyEvent = new FrameReadyEventArgs();
-                var kinectImageData = new KinectImageData(boundaries);
+                var kinectImageData = new KinectImageData(Boundaries);
 
                 using (var depthFrame = e.OpenDepthImageFrame())
                 {
@@ -63,6 +77,7 @@ namespace ClownChase
                 }
 
                 frameReadyEvent.Data = kinectImageData;
+                frameReadyEvent.Mapper = new Mapper(Boundaries, _kinectSensor.CoordinateMapper);
 
                 frameReady(sender, frameReadyEvent);                
             }
