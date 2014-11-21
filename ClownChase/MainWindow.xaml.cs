@@ -26,7 +26,20 @@ namespace ClownChase
                 return;
             }
 
-            ShowStatus(Properties.Resources.KinectFound);
+            var start = _sensor.Start();
+            if (start)
+            {
+                ShowStatus(Properties.Resources.KinectStarted);                                
+            }
+            else
+            {
+                ShowStatus(Properties.Resources.KinectNotStarted);                
+            }
+        }
+
+        public void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _sensor.Stop();
         }
 
         private void ShowStatus(string message)

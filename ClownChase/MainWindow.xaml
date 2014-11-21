@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ClownChase.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Microsoft Kinect Mirror" Height="634" Width="751" Loaded="WindowLoaded">
+        Title="Microsoft Kinect Mirror" Height="634" Width="751" Loaded="WindowLoaded" Closing="WindowClosing">
     <Window.Resources>
         <SolidColorBrush x:Key="OrangeBrush" Color="#ffff8000"/>
         <Style TargetType="{x:Type Image}">

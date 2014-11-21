@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="KinectFound" xml:space="preserve">
-    <value>Kinect was successfully detected.</value>
-  </data>
   <data name="KinectNotFound" xml:space="preserve">
     <value>No Kinect was found.  Attach &amp; restart application.</value>
+  </data>
+  <data name="KinectNotStarted" xml:space="preserve">
+    <value>Unable to start Kinect.</value>
+  </data>
+  <data name="KinectStarted" xml:space="preserve">
+    <value>Kinect was successfully started.</value>
   </data>
 </root>

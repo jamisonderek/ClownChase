@@ -9,7 +9,7 @@ namespace ClownChase
 {
     public class Sensor : IKinectSensor
     {
-        private readonly KinectSensor _kinectSensor;
+        private KinectSensor _kinectSensor;
 
         public Sensor(KinectSensor kinectSensor)
         {
@@ -21,5 +21,31 @@ namespace ClownChase
             get { return _kinectSensor != null && (_kinectSensor.Status == KinectStatus.Connected); }
         }
 
+        public bool Start()
+        {
+            if (_kinectSensor != null)
+            {
+                try
+                {
+                    _kinectSensor.Start();
+                }
+                catch (Exception)
+                {
+                    _kinectSensor = null;
+                }
+            }
+
+            return _kinectSensor != null;
+        }
+
+        public bool Stop()
+        {
+            if (_kinectSensor != null)
+            {
+                _kinectSensor.Stop();
+            }
+
+            return _kinectSensor != null;
+        }    
     }
 }

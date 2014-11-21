@@ -61,20 +61,29 @@ namespace ClownChase.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kinect was successfully detected..
-        /// </summary>
-        internal static string KinectFound {
-            get {
-                return ResourceManager.GetString("KinectFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No Kinect was found.  Attach &amp; restart application..
         /// </summary>
         internal static string KinectNotFound {
             get {
                 return ResourceManager.GetString("KinectNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to start Kinect..
+        /// </summary>
+        internal static string KinectNotStarted {
+            get {
+                return ResourceManager.GetString("KinectNotStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kinect was successfully started..
+        /// </summary>
+        internal static string KinectStarted {
+            get {
+                return ResourceManager.GetString("KinectStarted", resourceCulture);
             }
         }
     }

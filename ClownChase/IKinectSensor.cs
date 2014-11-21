@@ -9,5 +9,9 @@ namespace ClownChase
     public interface IKinectSensor
     {
         bool Connected { get; }
+
+        bool Start();
+        bool Stop();
+
     }
 }
