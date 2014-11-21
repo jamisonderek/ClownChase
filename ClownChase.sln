@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClownChase", "ClownChase.csproj", "{D3E05FDC-8DB7-4A6D-BB56-4927C8EB5276}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClownChase", "ClownChase\ClownChase.csproj", "{D3E05FDC-8DB7-4A6D-BB56-4927C8EB5276}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClownChase.Test", "..\ClownChase.Test\ClownChase.Test.csproj", "{BE45F9D1-9A65-46D2-BAB9-E7771C743600}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClownChase.Test", "Test\ClownChase.Test.csproj", "{BE45F9D1-9A65-46D2-BAB9-E7771C743600}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
