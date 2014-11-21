@@ -1,0 +1,7 @@
+# git ignore file
+*.ncrunchsolution
+*.user
+*.suo
+*_Resharper.*
+bin
+obj
