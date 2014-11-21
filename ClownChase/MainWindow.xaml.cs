@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Microsoft.Kinect;
 
 namespace ClownChase
 {
@@ -8,8 +7,9 @@ namespace ClownChase
     /// </summary>
     public partial class MainWindow : Window
     {
-        private IKinect _kinect;
-        private KinectSensor _sensor;
+        private readonly IKinect _kinect;
+
+        private IKinectSensor _sensor;
 
         public MainWindow()
         {
@@ -20,7 +20,7 @@ namespace ClownChase
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             _sensor = _kinect.GetSensor();
-            if (_sensor == null)
+            if (!_sensor.Connected)
             {
                 ShowStatus(Properties.Resources.KinectNotFound);
                 return;

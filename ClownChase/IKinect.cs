@@ -4,6 +4,6 @@ namespace ClownChase
 {
     public interface IKinect
     {
-        KinectSensor GetSensor();
+        IKinectSensor GetSensor();
     }
 }
