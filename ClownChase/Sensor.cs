@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Kinect;
-using System.IO;
 
 namespace ClownChase
 {
@@ -19,6 +15,16 @@ namespace ClownChase
         public bool Connected
         {
             get { return _kinectSensor != null && (_kinectSensor.Status == KinectStatus.Connected); }
+        }
+
+        public void Initialize()
+        {
+            var depthStream = _kinectSensor.DepthStream;
+            var colorStream = _kinectSensor.ColorStream;
+
+            depthStream.Enable(KinectImageData.DepthFormat);
+            depthStream.Range = DepthRange.Default;
+            colorStream.Enable(KinectImageData.ColorFormat);
         }
 
         public bool Start()

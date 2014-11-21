@@ -26,6 +26,8 @@ namespace ClownChase
                 return;
             }
 
+            _sensor.Initialize();
+
             var start = _sensor.Start();
             if (start)
             {
