@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using ClownChase.Properties;
 
 namespace ClownChase
 {
@@ -13,6 +14,10 @@ namespace ClownChase
 
         public readonly int DepthMinX;
         public readonly int DepthMaxX;
+        public readonly int DepthMinY;
+        public readonly int DepthMaxY;
+
+
 
         public int DepthWidth
         {
@@ -32,9 +37,13 @@ namespace ClownChase
             DepthDataLength = depthDataLength;
             ColorDataLength = colorDataLength;
 
-            const double edges = 0.4;
-            DepthMinX = (int)(DepthWidth * edges);
-            DepthMaxX = (int)(DepthWidth * (1 - edges));
+            var xRange = Settings.Default.xRange;
+            DepthMinX = (int)(DepthWidth * xRange);
+            DepthMaxX = (int)(DepthWidth * (1 - xRange));
+
+            var yRange = Settings.Default.yRange;
+            DepthMinY = (int)(DepthHeight * yRange);
+            DepthMaxY = (int)(DepthHeight * (1 - yRange));
 
             Debug.Assert(DepthMinX >= 0);
             Debug.Assert(DepthMinX < DepthMaxX);

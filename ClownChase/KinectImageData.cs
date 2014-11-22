@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Dynamic;
+using ClownChase.Properties;
 using Microsoft.Kinect;
 
 namespace ClownChase
@@ -32,10 +34,9 @@ namespace ClownChase
         private Position NearestObject()
         {
             var position = new Position {Depth = 10000};
-
-            for (var y = 0; y < Boundaries.DepthHeight; y += 20)
+            for (var y = Boundaries.DepthMinY; y < Boundaries.DepthMaxY; y += Settings.Default.objectYDelta)
             {
-                for (var x = Boundaries.DepthMinX; x < Boundaries.DepthMaxX; x++)
+                for (var x = Boundaries.DepthMinX; x < Boundaries.DepthMaxX; x += Settings.Default.objectXDelta)
                 {
                     var i = (y*Boundaries.DepthWidth) + x;
                     var d = DepthPixels[i].Depth;
@@ -56,57 +57,51 @@ namespace ClownChase
 
         private Position ClipX(Position position, Func<int, int, bool> showPixel)
         {
-            int maxMiss = 4;
-
-            var miss = 0;
-            for (position.MinX = position.NearestX; position.MinX >= 0; position.MinX--)
-            {
-                bool found = false;
-                for (var y = 0; y < Boundaries.DepthHeight; y += 10)
-                {
-                    var i = (y * Boundaries.DepthWidth) + position.MinX;
-                    var d = DepthPixels[i].Depth;
-                    if (showPixel(position.Depth, d) && (d != 0))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                {
-                    miss = 0;
-                }
-                else if (++miss==maxMiss)
-                {
-                    break;
-                }
-            }
-
-            miss = 0;
-            for (position.MaxX = position.NearestX; position.MaxX < Boundaries.DepthWidth; position.MaxX++)
-            {
-                bool found = false;
-                for (var y = 0; y < Boundaries.DepthHeight; y += 10)
-                {
-                    var i = (y * Boundaries.DepthWidth) + position.MaxX;
-                    var d = DepthPixels[i].Depth;
-                    if (showPixel(position.Depth, d) && (d != 0))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                {
-                    miss = 0;
-                }
-                else if (++miss==maxMiss)
-                {
-                    break;
-                }
-            }
-
+            position.MinX = GetXEdge(0-Settings.Default.clipXDelta, position, showPixel);
+            position.MaxX = GetXEdge(Settings.Default.clipXDelta, position, showPixel);
             return position;
+        }
+
+        private int GetXEdge(int xDelta, Position position, Func<int, int, bool> showPixel)
+        {
+            var miss = 0;
+            var x = position.NearestX;
+
+            do
+            {
+                if (!PixelAtX(x, position, showPixel))
+                {
+                    if (++miss == Settings.Default.maxMiss)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    miss = 0;
+                }
+
+                x += xDelta;
+            } while (x > 0 && x < Boundaries.DepthWidth);
+            
+            return x;
+        }
+
+        private bool PixelAtX(int x, Position position, Func<int, int, bool> showPixel)
+        {
+            bool found = false;
+            for (var y = Boundaries.DepthMinY; y < Boundaries.DepthMaxY; y += Settings.Default.clipYDelta)
+            {
+                var i = (y * Boundaries.DepthWidth) + x;
+                var d = DepthPixels[i].Depth;
+                if (showPixel(position.Depth, d) && (d != 0))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            return found;
         }
 
         public Position PopulateColorPixelMask(ColorPixelMask mask, Mapper mapper, Func<int, int, bool> showPixel)
@@ -116,6 +111,11 @@ namespace ClownChase
 
             var nearestObject = NearestObject();
             nearestObject = ClipX(nearestObject, showPixel);
+
+            if (nearestObject.NearestX == 0)
+            {
+                return nearestObject;                
+            }
 
             var depthOffset = 0;
             for (var y = 0; y < Boundaries.DepthHeight; ++y)
