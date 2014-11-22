@@ -4,20 +4,21 @@ namespace ClownChase
 {
     public class Mapper
     {
-        public ColorImagePoint[] ColorCoordinates;
+        private readonly int _length;
         private readonly CoordinateMapper _coordinateMapper;
 
         public Mapper(Boundaries boundaries, CoordinateMapper coordinateMapper)
         {
-            ColorCoordinates = new ColorImagePoint[boundaries.DepthDataLength];
+            _length = boundaries.DepthDataLength;
             _coordinateMapper = coordinateMapper;
         }
 
         public ColorImagePoint[] Map(KinectImageData kinectImageData)
         {
             var depthData = kinectImageData.DepthPixels;
-            _coordinateMapper.MapDepthFrameToColorFrame(KinectImageData.DepthFormat, depthData, KinectImageData.ColorFormat, ColorCoordinates);
-            return ColorCoordinates;
+            var colorCoordinates = new ColorImagePoint[_length];
+            _coordinateMapper.MapDepthFrameToColorFrame(KinectImageData.DepthFormat, depthData, KinectImageData.ColorFormat, colorCoordinates);
+            return colorCoordinates;
         }
     }
 }

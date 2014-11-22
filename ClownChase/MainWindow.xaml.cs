@@ -69,7 +69,7 @@ namespace ClownChase
             {
                 mask = new ColorPixelMask(e.Data.Boundaries);
                 var nearestObject = e.Data.PopulateColorPixelMask(mask, e.Mapper, (i, i1) => Math.Abs(i-i1)<400);
-                message += String.Format("  object@{0}", nearestObject);
+                message += String.Format(" @{0}/{1}/{2}[{3}]", nearestObject.MinX, nearestObject.NearestX, nearestObject.MaxX, nearestObject.Depth);
             }
 
             if (e.ColorReceived)
