@@ -7,6 +7,7 @@ namespace ClownChase
         public int[] Mask;
 
         private const int OpaquePixelValue = -1;
+        private const int TranslucentPixelValue = 30<<24;
         private int _depthWidth;
         private int _depthHeight;
 
@@ -22,13 +23,13 @@ namespace ClownChase
             Array.Clear(Mask, 0, Mask.Length);
         }
 
-        public void Set(int x, int y)
+        public void Set(int x, int y, bool opaque)
         {
             if ((x > 0 && x < _depthWidth) && (y >= 0 && y < _depthHeight))
             {
                 int colorIndex = x + (y * _depthWidth);
-                Mask[colorIndex] = OpaquePixelValue;
-                Mask[colorIndex - 1] = OpaquePixelValue;
+                Mask[colorIndex] = opaque ? OpaquePixelValue : TranslucentPixelValue;
+                Mask[colorIndex - 1] = opaque ? OpaquePixelValue : TranslucentPixelValue;
             }
         }
     }

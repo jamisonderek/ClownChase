@@ -70,7 +70,7 @@ namespace ClownChase.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int clipYDelta {
             get {
                 return ((int)(this["clipYDelta"]));
