@@ -25,7 +25,7 @@ namespace ClownChase.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
         public double yRange {
             get {
                 return ((double)(this["yRange"]));

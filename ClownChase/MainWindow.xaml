@@ -20,8 +20,8 @@
             <Image Name ="PersonColor"/>
         </Grid>
         <StatusBar Grid.Row="1" HorizontalAlignment="Stretch" Name="StatusBar" VerticalAlignment="Bottom" Background="Black" Foreground="{StaticResource OrangeBrush}">
-            <StatusBarItem>
-                <TextBlock Name="StatusBarText" FontSize="32">Boo</TextBlock>
+            <StatusBarItem RenderTransformOrigin="0.5,0.834" Height="108">
+                <TextBlock Name="StatusBarText" FontSize="55">Boo</TextBlock>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ClownChase.Properties;
 
 namespace ClownChase
 {
@@ -69,7 +70,7 @@ namespace ClownChase
             {
                 mask = new ColorPixelMask(e.Data.Boundaries);
                 var nearestObject = e.Data.PopulateColorPixelMask(mask, e.Mapper, (i, i1) => Math.Abs(i-i1)<400);
-                message += String.Format(" @{0}/{1}/{2}[{3}]", nearestObject.MinX, nearestObject.NearestX, nearestObject.MaxX, nearestObject.Depth);
+                message += String.Format(" @{0}x{1}[{2},{3:00.0}]", nearestObject.NearestX, nearestObject.NearestY, nearestObject.Depth, 0.003280*nearestObject.Depth);
             }
 
             if (e.ColorReceived)
