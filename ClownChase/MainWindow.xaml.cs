@@ -12,7 +12,8 @@ namespace ClownChase
     public partial class MainWindow
     {
         private readonly IKinect _kinect;
-        private IFrameProcessor _greenScreen;
+        private IFrameProcessor _greenScreenMask;
+        private IFrameProcessor _greenScreenColor;
         private IKinectSensor _sensor;
 
         public MainWindow()
@@ -26,7 +27,8 @@ namespace ClownChase
             _sensor = _kinect.GetSensor();
             
             var mask = new ConnectedToNearestMask();
-            _greenScreen = new GreenScreenMaskFrameProcessor(PersonColor, mask);
+            _greenScreenMask = new GreenScreenMaskFrameProcessor(mask);
+            _greenScreenColor = new GreenScreenColorFrameProcessor(PersonColor);
 
             if (!_sensor.Connected)
             {
@@ -72,7 +74,8 @@ namespace ClownChase
         private int _frame;
         private void FrameReady(object sender, FrameReadyEventArgs e)
         {
-            var message = _greenScreen.ProcessFrame(e);
+            var message = _greenScreenMask.ProcessFrame(e);
+            message += _greenScreenColor.ProcessFrame(e);
             
             message = String.Format("Frame {0} {1}", ++_frame, message);
             if (_lastFrame != DateTime.MinValue)

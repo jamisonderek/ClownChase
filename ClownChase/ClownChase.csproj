@@ -61,6 +61,7 @@
     <Compile Include="ColorPixelMask.cs" />
     <Compile Include="ConnectedToNearestMask.cs" />
     <Compile Include="FrameReadyEventArgs.cs" />
+    <Compile Include="GreenScreenColorFrameProcessor.cs" />
     <Compile Include="GreenScreenMaskFrameProcessor.cs" />
     <Compile Include="IFrameProcessor.cs" />
     <Compile Include="IMask.cs" />
