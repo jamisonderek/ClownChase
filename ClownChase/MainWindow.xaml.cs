@@ -83,12 +83,12 @@ namespace ClownChase
             }
             if (e.Key == Key.S)
             {
-                var storage = new Storage();
+                var storage = new Storage(_sensor.Boundaries);
                 storage.Save(_captureFrameCollection);
             }
             if (e.Key == Key.L)
             {
-                var storage = new Storage();
+                var storage = new Storage(_sensor.Boundaries);
                 storage.Load(_captureFrameCollection);
             }
         }

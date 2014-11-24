@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ClownChase
 {
     public class Storage
     {
+        private const string Ext = ".cln";
+
+        private readonly Boundaries _boundaries;
+
+        public Storage(Boundaries boundaries)
+        {
+            _boundaries = boundaries;
+        }
+
         public void Load(ICaptureFrameCollection captureFrameCollection)
         {
-            var fileNames = Directory.GetFiles(".", "*.cln");
+            var fileNames = Directory.GetFiles(".", "*"+Ext);
             Array.Sort(fileNames);
             foreach (var fileName in fileNames)
             {
@@ -31,14 +40,36 @@ namespace ClownChase
 
         private void Save(int order, CapturedFrame frame)
         {
-            var fileName = GetFileName(order, frame)+".cln";
-            using (var fs = File.OpenWrite(fileName))
+            var fileName = GetFileName(order, frame);
+            using (var fs = File.OpenWrite(fileName+Ext))
             {
                 WriteInt(fs, frame.NearPosition.Depth);
                 WriteInt(fs, frame.NearPosition.X);
                 WriteInt(fs, frame.NearPosition.Y);
                 WriteArray(fs, frame.ColorPixels);
                 WriteArray(fs, frame.Mask);
+            }
+            SavePicture(fileName+".png", frame);
+        }
+
+        private void SavePicture(string fileName, CapturedFrame frame)
+        {
+            var rect = _boundaries.ColorRect;
+
+            var bm = new WriteableBitmap(rect.Width, rect.Height, 96, 96, PixelFormats.Bgr32, null);
+            bm.WritePixels(rect, frame.ColorPixels, bm.PixelWidth * sizeof(int), 0);
+
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bm));
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.Create))
+                {
+                    encoder.Save(fs);
+                }
+            }
+            catch (IOException)
+            {
             }
         }
 
