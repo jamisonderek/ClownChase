@@ -26,7 +26,7 @@ namespace ClownChase
             _sensor = _kinect.GetSensor();
             
             var mask = new ConnectedToNearestMask();
-            _greenScreen = new GreenScreenFrameProcessor(PersonColor, mask);
+            _greenScreen = new GreenScreenMaskFrameProcessor(PersonColor, mask);
 
             if (!_sensor.Connected)
             {
