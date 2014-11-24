@@ -11,6 +11,7 @@ namespace ClownChase
         public DepthImagePixel[] DepthPixels;
         public byte[] ColorPixels;
         public Boundaries Boundaries;
+        private Position? _nearestObject;
 
         public KinectImageData(Boundaries boundaries)
         {
@@ -20,8 +21,13 @@ namespace ClownChase
         }
         public Position NearestObject()
         {
-            return NearestObject(Boundaries.DepthMinY, Boundaries.DepthMaxY, Settings.Default.objectYDelta,
-                Boundaries.DepthMinX, Boundaries.DepthMaxX, Settings.Default.objectXDelta);
+            if (!_nearestObject.HasValue)
+            {
+                _nearestObject = NearestObject(Boundaries.DepthMinY, Boundaries.DepthMaxY, Settings.Default.objectYDelta,
+                    Boundaries.DepthMinX, Boundaries.DepthMaxX, Settings.Default.objectXDelta);
+            }
+
+            return _nearestObject.Value;
         }
 
         public Position NearestObject(int minY, int maxY, int deltaY, int minX, int maxX, int deltaX)
@@ -44,6 +50,7 @@ namespace ClownChase
                 }
             }
             position.Depth = minDepth;
+            _nearestObject = position;
 
             return position;
         }

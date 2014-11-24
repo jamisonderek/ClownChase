@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Media;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,6 +16,8 @@ namespace ClownChase
         private readonly IKinect _kinect;
         private IFrameProcessor _greenScreenMask;
         private IFrameProcessor _greenScreenColor;
+        private IFrameProcessor _captureFrames;
+        private IFrameProcessor _renderFrame;
         private IKinectSensor _sensor;
 
         public MainWindow()
@@ -29,6 +33,8 @@ namespace ClownChase
             var mask = new ConnectedToNearestMask();
             _greenScreenMask = new GreenScreenMaskFrameProcessor(mask);
             _greenScreenColor = new GreenScreenColorFrameProcessor(PersonColor);
+            _captureFrames = new CaptureFrameProcessor();
+            _renderFrame = new RenderFrameProcessor((CaptureFrameProcessor)_captureFrames, ClownColor);
 
             if (!_sensor.Connected)
             {
@@ -42,6 +48,7 @@ namespace ClownChase
             ShowStatus(start?Properties.Resources.KinectStarted:Properties.Resources.KinectNotStarted);
 
             InitializeImage(PersonColor, _sensor.Boundaries);
+            InitializeImage(ClownColor, _sensor.Boundaries);
 
             _sensor.FrameReady += FrameReady;
         }
@@ -51,11 +58,26 @@ namespace ClownChase
             _sensor.Stop();
         }
 
+        private bool _renderClown;
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Space)
+            if (e.Key == Key.B)
             {
-
+                ((CaptureFrameProcessor) _captureFrames).Capture = true;
+                SystemSounds.Beep.Play();
+                Thread.Sleep(1000);
+                SystemSounds.Beep.Play();
+                Thread.Sleep(1000);
+                SystemSounds.Beep.Play();
+                Thread.Sleep(1000);
+            }
+            if (e.Key == Key.E)
+            {
+                ((CaptureFrameProcessor)_captureFrames).Capture = false;
+            }
+            if (e.Key == Key.C)
+            {
+                _renderClown = true;
             }
         }
 
@@ -74,14 +96,22 @@ namespace ClownChase
         private int _frame;
         private void FrameReady(object sender, FrameReadyEventArgs e)
         {
+            if ((!e.ColorReceived || !e.DepthReceived))
+                return;
+
             var message = _greenScreenMask.ProcessFrame(e);
             message += _greenScreenColor.ProcessFrame(e);
+            message += _captureFrames.ProcessFrame(e);
+            if (_renderClown)
+            {
+                message += _renderFrame.ProcessFrame(e);
+            }
             
             message = String.Format("Frame {0} {1}", ++_frame, message);
             if (_lastFrame != DateTime.MinValue)
             {
                 var diff = DateTime.Now - _lastFrame;
-                message += String.Format(" {0:00.00} frames/sec", 1000 / diff.TotalMilliseconds);
+                message += String.Format(" {0:00.00} f/sec", 1000 / diff.TotalMilliseconds);
             }
             _lastFrame = DateTime.Now;
             ShowStatus(message);
