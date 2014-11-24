@@ -81,6 +81,16 @@ namespace ClownChase
             {
                 _renderClown = true;
             }
+            if (e.Key == Key.S)
+            {
+                var storage = new Storage();
+                storage.Save(_captureFrameCollection);
+            }
+            if (e.Key == Key.L)
+            {
+                var storage = new Storage();
+                storage.Load(_captureFrameCollection);
+            }
         }
 
         private void InitializeImage(System.Windows.Controls.Image image, Boundaries boundaries)
