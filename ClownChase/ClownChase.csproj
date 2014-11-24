@@ -59,12 +59,14 @@
     </ApplicationDefinition>
     <Compile Include="Boundaries.cs" />
     <Compile Include="CapturedFrame.cs" />
+    <Compile Include="CaptureFrameCollection.cs" />
     <Compile Include="CaptureFrameProcessor.cs" />
     <Compile Include="ColorPixelMask.cs" />
     <Compile Include="ConnectedToNearestMask.cs" />
     <Compile Include="FrameReadyEventArgs.cs" />
     <Compile Include="GreenScreenColorFrameProcessor.cs" />
     <Compile Include="GreenScreenMaskFrameProcessor.cs" />
+    <Compile Include="ICaptureFrameCollection.cs" />
     <Compile Include="IFrameProcessor.cs" />
     <Compile Include="IMask.cs" />
     <Compile Include="KinectImageData.cs" />

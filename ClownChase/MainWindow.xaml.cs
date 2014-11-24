@@ -14,6 +14,7 @@ namespace ClownChase
     public partial class MainWindow
     {
         private readonly IKinect _kinect;
+        private ICaptureFrameCollection _captureFrameCollection;
         private IFrameProcessor _greenScreenMask;
         private IFrameProcessor _greenScreenColor;
         private IFrameProcessor _captureFrames;
@@ -29,12 +30,13 @@ namespace ClownChase
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             _sensor = _kinect.GetSensor();
-            
+
+            _captureFrameCollection = new CaptureFrameCollection();
             var mask = new ConnectedToNearestMask();
             _greenScreenMask = new GreenScreenMaskFrameProcessor(mask);
             _greenScreenColor = new GreenScreenColorFrameProcessor(PersonColor);
-            _captureFrames = new CaptureFrameProcessor();
-            _renderFrame = new RenderFrameProcessor((CaptureFrameProcessor)_captureFrames, ClownColor);
+            _captureFrames = new CaptureFrameProcessor(_captureFrameCollection);
+            _renderFrame = new RenderFrameProcessor(_captureFrameCollection, ClownColor);
 
             if (!_sensor.Connected)
             {

@@ -1,52 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClownChase
 {
     public class CaptureFrameProcessor : IFrameProcessor
     {
+        private readonly ICaptureFrameCollection _captureFrameCollection;
         public bool Capture;
 
-        private readonly List<CapturedFrame> _capturedFrames;
-        public IEnumerable<CapturedFrame> CapturedFrames
+        public CaptureFrameProcessor(ICaptureFrameCollection captureFrameCollection)
         {
-            get { return _capturedFrames.AsReadOnly(); }
-        }
-
-        public CapturedFrame Get(int depth)
-        {
-            if (_capturedFrames.Count == 0)
-            {
-                return null;
-            }
-
-            CapturedFrame bestFrame = null;
-            foreach (CapturedFrame frame in _capturedFrames)
-            {
-                var d = frame.NearPosition.Depth;
-                if (d > depth)
-                {
-                    if (bestFrame == null)
-                    {
-                        bestFrame = frame;
-                    }
-                    else
-                    {
-                        if (d < bestFrame.NearPosition.Depth)
-                        {
-                            bestFrame = frame;
-                        }
-                    }
-                }
-            }
-
-            return bestFrame;
-        }
-
-        public CaptureFrameProcessor()
-        {
-            _capturedFrames = new List<CapturedFrame>();
+            _captureFrameCollection = captureFrameCollection;
         }
 
         public string ProcessFrame(FrameReadyEventArgs eventArgs)
@@ -65,7 +29,7 @@ namespace ClownChase
                     Mask = m, 
                     NearPosition = eventArgs.Data.NearestObject()
                 };
-                _capturedFrames.Add(capturedFrame);
+                _captureFrameCollection.Add(capturedFrame);
             }
 
             return String.Empty;

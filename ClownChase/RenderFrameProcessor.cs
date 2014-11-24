@@ -8,12 +8,12 @@ namespace ClownChase
 {
     public class RenderFrameProcessor : IFrameProcessor
     {
-        private readonly CaptureFrameProcessor _captures;
+        private readonly ICaptureFrameCollection _captureFrameCollection;
         private readonly Image _image;
 
-        public RenderFrameProcessor(CaptureFrameProcessor captures, Image image)
+        public RenderFrameProcessor(ICaptureFrameCollection captureFrameCollection, Image image)
         {
-            _captures = captures;
+            _captureFrameCollection = captureFrameCollection;
             _image = image;
         }
 
@@ -22,7 +22,12 @@ namespace ClownChase
             var depth = eventArgs.Data.NearestObject().Depth;
             depth += 100;
 
-            var capturedFrame = _captures.Get(depth);
+            var capturedFrame = _captureFrameCollection.Get(depth);
+            if (capturedFrame == null)
+            {
+                return " C:no";
+            }
+
             var mask = new int[eventArgs.Data.Boundaries.DepthDataLength];
             if (capturedFrame.Mask != null)
             {
